@@ -1,0 +1,26 @@
+/* static/css/style.css */
+
+body {
+    background: linear-gradient(135deg, #f3f4ff, #ffffff);
+    min-height: 100vh;
+}
+
+.metric-card {
+    border-radius: 12px;
+}
+
+.metric-card h3 {
+    font-weight: 700;
+}
+
+.card {
+    border-radius: 12px;
+}
+
+textarea#news_text {
+    resize: vertical;
+}
+
+.badge {
+    font-size: 0.8rem;
+}

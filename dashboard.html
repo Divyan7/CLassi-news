@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News Topic Classifier - 7 Categories</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .main-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+            transition: transform 0.3s ease;
+        }
+
+        .main-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        .page-title {
+            color: #2c3e50;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        .category-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border-left: 5px solid;
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        .category-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 7 Category Colors */
+        .category-card.politics {
+            border-left-color: #9b59b6;
+            background: linear-gradient(to right, #f9f0ff, #ffffff);
+        }
+
+        .category-card.entertainment {
+            border-left-color: #e74c3c;
+            background: linear-gradient(to right, #fff0f0, #ffffff);
+        }
+
+        .category-card.worldnews {
+            border-left-color: #3498db;
+            background: linear-gradient(to right, #f0f9ff, #ffffff);
+        }
+
+        .category-card.business {
+            border-left-color: #f39c12;
+            background: linear-gradient(to right, #fff9f0, #ffffff);
+        }
+
+        .category-card.sciencetech {
+            border-left-color: #1abc9c;
+            background: linear-gradient(to right, #f0fffb, #ffffff);
+        }
+
+        .category-card.sports {
+            border-left-color: #2ecc71;
+            background: linear-gradient(to right, #f0fff5, #ffffff);
+        }
+
+        .category-card.others {
+            border-left-color: #95a5a6;
+            background: linear-gradient(to right, #f8f9fa, #ffffff);
+        }
+
+        .category-title {
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .sentence-item {
+            padding: 10px;
+            margin-bottom: 8px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 3px solid #ddd;
+            transition: all 0.2s;
+        }
+
+        .sentence-item:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+
+        .stats-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+        }
+
+        .btn-primary-custom {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 10px;
+            padding: 12px 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 14px rgba(102, 126, 234, 0.4);
+        }
+
+        textarea {
+            border-radius: 10px;
+            border: 2px solid #e0e0e0;
+            transition: border 0.3s;
+        }
+
+        textarea:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.25);
+        }
+
+        .file-upload {
+            border: 2px dashed #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .file-upload:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .alert-box {
+            border-radius: 10px;
+            border-left: 5px solid;
+        }
+
+        .category-badge {
+            font-size: 0.8rem;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .badge-politics {
+            background: #9b59b6;
+            color: white;
+        }
+
+        .badge-entertainment {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .badge-worldnews {
+            background: #3498db;
+            color: white;
+        }
+
+        .badge-business {
+            background: #f39c12;
+            color: white;
+        }
+
+        .badge-sciencetech {
+            background: #1abc9c;
+            color: white;
+        }
+
+        .badge-sports {
+            background: #2ecc71;
+            color: white;
+        }
+
+        .badge-others {
+            background: #95a5a6;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="main-card">
+                    <h1 class="page-title">
+                        <i class="fas fa-newspaper me-2"></i>News Classifier
+                        <span class="badge bg-success ms-2">7 Categories</span>
+                    </h1>
+                    <p class="text-muted mb-0">
+                        Classify news into:
+                        <span class="badge badge-politics">Politics</span>
+                        <span class="badge badge-entertainment">Entertainment</span>
+                        <span class="badge badge-worldnews">World News</span>
+                        <span class="badge badge-business">Business</span>
+                        <span class="badge badge-sciencetech">Science/Tech</span>
+                        <span class="badge badge-sports">Sports</span>
+                        <span class="badge badge-others">Others</span>
+                    </p>
+                    <div class="mt-2">
+                        <small class="text-muted">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Model Status: <strong>{{ model_status }}</strong>
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Input Section -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="main-card">
+                    <form method="POST" enctype="multipart/form-data">
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">
+                                <i class="fas fa-keyboard me-2"></i>Enter News Text
+                            </label>
+                            <textarea class="form-control" id="news_text" name="news_text" rows="6" placeholder="Paste or type news articles here...
+
+Examples:
+• Politics: 'Congress passes new climate legislation with bipartisan support.'
+• Entertainment: 'Taylor Swift announces world tour for new album.'
+• World News: 'UN emergency meeting addresses humanitarian crisis.'
+• Business: 'Stock markets surge after positive economic indicators.'
+• Science/Tech: 'Breakthrough in quantum computing announced.'
+• Sports: 'Championship game ends in dramatic overtime victory.'
+• Others: 'Study shows benefits of Mediterranean diet for heart health.'"></textarea>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <label class="form-label fw-semibold">
+                                    <i class="fas fa-file-upload me-2"></i>Upload .txt File
+                                </label>
+                                <div class="file-upload">
+                                    <input type="file" class="form-control" name="file" accept=".txt" id="fileInput">
+                                    <label for="fileInput" class="d-block text-muted mt-2">
+                                        <i class="fas fa-cloud-upload-alt fa-2x mb-2"></i><br>
+                                        Click to upload or drag and drop
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <label class="form-label fw-semibold">
+                                    <i class="fas fa-bolt me-2"></i>Quick Samples
+                                </label>
+                                <div class="d-grid gap-2">
+                                    <button type="button" class="btn btn-outline-primary btn-sm"
+                                        onclick="loadSample('politics')">
+                                        <i class="fas fa-landmark"></i> Politics Sample
+                                    </button>
+                                    <button type="button" class="btn btn-outline-danger btn-sm"
+                                        onclick="loadSample('entertainment')">
+                                        <i class="fas fa-film"></i> Entertainment Sample
+                                    </button>
+                                    <button type="button" class="btn btn-outline-info btn-sm"
+                                        onclick="loadSample('mixed')">
+                                        <i class="fas fa-random"></i> Mixed News Sample
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <button type="submit" class="btn btn-primary-custom">
+                                <i class="fas fa-brain me-2"></i>Classify News
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary" onclick="clearForm()">
+                                <i class="fas fa-eraser me-2"></i>Clear
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Error Message -->
+        {% if error_message %}
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="alert alert-danger alert-box">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    {{ error_message|safe }}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Statistics -->
+        {% if total_sentences > 0 %}
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="stats-card">
+                    <h6 class="fw-bold mb-3">
+                        <i class="fas fa-chart-pie me-2"></i>Classification Summary
+                    </h6>
+                    <div class="row">
+                        <div class="col-md-3 col-6 mb-3">
+                            <div class="text-center">
+                                <h3 class="text-primary">{{ total_sentences }}</h3>
+                                <p class="text-muted mb-0">Total Sentences</p>
+                            </div>
+                        </div>
+                        {% for cat in categories %}
+                        {% if grouped[cat] %}
+                        <div class="col-md-2 col-4 mb-3">
+                            <div class="text-center">
+                                <h3 class="text-{{ 
+                                    'primary' if cat == 'Politics' 
+                                    else 'danger' if cat == 'Entertainment'
+                                    else 'info' if cat == 'World News'
+                                    else 'warning' if cat == 'Business'
+                                    else 'success' if cat == 'Science/Tech'
+                                    else 'success' if cat == 'Sports'
+                                    else 'secondary'
+                                }}">{{ grouped[cat]|length }}</h3>
+                                <p class="text-muted mb-0">{{ cat }}</p>
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Results -->
+        <div class="row">
+            <div class="col-12">
+                <h3 class="mb-4">
+                    <i class="fas fa-chart-bar me-2"></i>Classification Results
+                    {% if total_sentences > 0 %}
+                    <span class="badge bg-primary ms-2">{{ total_sentences }} sentences</span>
+                    {% endif %}
+                </h3>
+            </div>
+        </div>
+
+        {% if grouped and total_sentences > 0 %}
+        <div class="row g-4">
+            {% for cat in categories %}
+            {% if grouped[cat] %}
+            <div class="col-lg-6 col-xl-4">
+                <div class="category-card {{ cat.lower().replace('/', '').replace(' ', '') }}">
+                    <div class="category-title">
+                        <span>
+                            <i class="fas fa-folder me-2"></i>{{ cat }}
+                            <span class="badge bg-light text-dark ms-2">{{ grouped[cat]|length }}</span>
+                        </span>
+                        <span class="text-muted small">
+                            {{ ((grouped[cat]|length / total_sentences) * 100)|round(1) }}%
+                        </span>
+                    </div>
+                    <div>
+                        {% for sentence in grouped[cat] %}
+                        <div class="sentence-item">
+                            <i class="fas fa-angle-right me-2 text-muted"></i>
+                            {{ sentence }}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+        {% elif total_sentences == 0 and request.method == 'POST' %}
+        <div class="row">
+            <div class="col-12">
+                <div class="alert alert-info alert-box">
+                    <i class="fas fa-info-circle me-2"></i>
+                    No valid sentences found in the input. Please enter some news text.
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="row">
+            <div class="col-12">
+                <div class="alert alert-light alert-box text-center py-5">
+                    <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                    <h5 class="text-muted">No Results Yet</h5>
+                    <p class="text-muted mb-0">Enter news text above and click "Classify News"</p>
+                    <div class="mt-3">
+                        <small class="text-muted">
+                            <i class="fas fa-lightbulb me-1"></i>
+                            Try pasting news articles, headlines, or use the sample buttons
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Footer -->
+        <div class="row mt-5">
+            <div class="col-12 text-center">
+                <p class="text-muted">
+                    <small>
+                        <i class="fas fa-code me-1"></i> News Classifier v2.0 |
+                        <i class="fas fa-brain ms-2 me-1"></i> TF-IDF + LinearSVC |
+                        <i class="fas fa-tags ms-2 me-1"></i> 7 Categories
+                    </small>
+                </p>
+                <div class="mt-2">
+                    {% for cat in categories %}
+                    <span class="badge badge-{{ cat.lower().replace('/', '').replace(' ', '') }} me-1 mb-1">
+                        {{ cat }}
+                    </span>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // File upload preview
+        document.getElementById('fileInput').addEventListener('change', function (e) {
+            const fileName = e.target.files[0]?.name || 'No file chosen';
+            document.querySelector('.file-upload label').innerHTML =
+                `<i class="fas fa-file-text fa-2x mb-2"></i><br>${fileName}`;
+        });
+
+        // Clear form function
+        function clearForm() {
+            document.getElementById('news_text').value = '';
+            document.getElementById('fileInput').value = '';
+            document.querySelector('.file-upload label').innerHTML =
+                '<i class="fas fa-cloud-upload-alt fa-2x mb-2"></i><br>Click to upload or drag and drop';
+        }
+
+        // Auto-resize textarea
+        const textarea = document.getElementById('news_text');
+        textarea.addEventListener('input', function () {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        });
+
+        // Load sample text
+        function loadSample(type) {
+            const samples = {
+                politics: "The President announced new environmental regulations today. Congress is debating the new healthcare bill. Local elections saw record voter turnout across the country. The Supreme Court will hear a landmark case next month.",
+
+                entertainment: "Taylor Swift's concert broke attendance records worldwide. The Oscars ceremony featured surprise wins and emotional speeches. Netflix announced a new original series with A-list actors. Music festival lineup revealed with major headliners.",
+
+                worldnews: "UN emergency meeting addresses ongoing humanitarian crisis. Earthquake strikes coastal region, rescue operations underway. International summit concludes with climate agreements. Diplomatic talks resume between neighboring countries.",
+
+                business: "Stock market reaches all-time high as tech stocks surge. Federal Reserve announces interest rate decision. Company earnings exceed analyst expectations. New startup receives massive funding round.",
+
+                sciencetech: "Breakthrough in quantum computing promises faster processing. NASA discovers evidence of water on distant planet. New smartphone features revolutionary camera technology. AI system passes medical licensing exam.",
+
+                sports: "Championship game ends in dramatic overtime victory. Olympic athlete breaks world record in final race. Team secures playoff spot with last-minute goal. Major tournament announces record prize money.",
+
+                others: "Study shows benefits of daily meditation for stress reduction. Travel guide recommends hidden destinations for 2024. New parenting book offers practical advice for families. Recipe for healthy meal goes viral on social media.",
+
+                mixed: "Congress passes new climate legislation with bipartisan support. Tech company announces breakthrough in battery technology. National team wins championship in thrilling final match. Study reveals benefits of plant-based diet. Celebrity announces retirement from acting career."
+            };
+
+            textarea.value = samples[type];
+            textarea.dispatchEvent(new Event('input'));
+            textarea.focus();
+
+            // Show notification
+            const categoryNames = {
+                politics: 'Politics', entertainment: 'Entertainment',
+                worldnews: 'World News', business: 'Business',
+                sciencetech: 'Science/Tech', sports: 'Sports',
+                others: 'Others', mixed: 'Mixed News'
+            };
+
+            alert(`Loaded ${categoryNames[type]} sample text`);
+        }
+    </script>
+</body>
+
+</html>
